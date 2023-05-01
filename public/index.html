@@ -37,17 +37,26 @@
 
       questionForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        var prevBtnName = questionForm.querySelector("button").innerHTML;
+        questionForm.querySelector("button").innerHTML = "prophesying...";
+        questionForm.querySelector("button").disabled = true;
+
         const userQuestion = questionInput.value.trim();
         if (!userQuestion) return;
 
-        const response = await fetch('http://localhost:3001/interpret-verse', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ verse: currentVerse, userQuestion }),
-});
+        const response = await fetch('/interpret-verse', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ verse: currentVerse, userQuestion }),
+        });
 
         const data = await response.json();
+        console.log(data);
         answerDisplay.textContent = data.answer;
+
+        questionForm.querySelector("button").innerHTML = prevBtnName;
+        questionForm.querySelector("button").disabled = false;
       });
 
       getRandomVerse();
